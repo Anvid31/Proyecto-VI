@@ -1,0 +1,34 @@
+<div class="flex flex-col min-h-screen">
+    <header class="bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-10">
+      <nav class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Señor Obesidad Morbida</h1>
+        <div class="space-x-4">
+          <button
+            onclick="window.location.href='/post'"
+            class="bg-white text-blue-600 px-4 py-2 rounded-lg"
+          >
+            Post
+          </button>
+        </div>
+      </nav>
+    </header>
+  
+    <main class="flex-grow mt-16 mb-16 p-4">
+      <div *ngIf="data.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div *ngFor="let item of data" class="bg-white rounded-lg shadow-md p-4">
+          <h2 class="text-xl font-semibold mb-2">{{ item.nombre }}</h2>
+          <p>{{ item.descripcion }}</p>
+          <p>{{ item.cantidad }}</p>
+          <p>{{ item.fecha }}</p>
+        </div>
+      </div>
+      <p *ngIf="data.length === 0">No se encontraron datos.</p>
+      
+        
+    </main>
+  
+    <footer class="bg-gray-800 text-white p-4 fixed bottom-0 left-0 right-0">
+      <p class="text-center"></p>
+    </footer>
+  </div>
+  
