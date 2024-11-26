@@ -1,34 +1,66 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import jsPDF from 'jspdf';
+import { SocketService } from '../../services/socket.service';
+
+interface Detalle {
+  nombre: string;
+  descripcion: string;
+  cantidad: number;
+  fecha: string;
+}
 
 @Component({
   selector: 'app-pdfs',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './pdfs.component.html',
-  styleUrl: './pdfs.component.css'
+  styleUrl: './pdfs.component.css',
 })
-export class PdfsComponent {
+export class PdfsComponent implements OnInit {
   mes: string = 'Enero';
   anio: string = '2024';
   totalGastos: number = 1500;
   totalVentas: number = 2000;
   totalActual: number = 500;
-  data = [
-    { nombre: 'Alquiler', descripcion: 'Pago de alquiler mensual', cantidad: 800, fecha: '2024-01-05' },
-    { nombre: 'Servicios', descripcion: 'Pago de electricidad y agua', cantidad: 300, fecha: '2024-01-10' },
-  ];
-  data2 = [
-    { nombre: 'Venta de producto A', descripcion: 'Venta realizada a cliente', cantidad: 1200, fecha: '2024-01-15' },
-    { nombre: 'Venta de producto B', descripcion: 'Venta realizada a cliente', cantidad: 800, fecha: '2024-01-20' },
-  ];
+  data: Detalle[] = [];
+  data2: Detalle[] = [];
+
+  constructor(private socketService: SocketService) {}
+
+  ngOnInit(): void {
+    this.getSocket();
+  }
+
+  getSocket(): void {
+    this.socketService.getSocketData().subscribe(
+      (data) => {
+        this.data = data.gasto || [];
+        this.data2 = data.venta || [];
+        this.calcularTotales();
+      },
+      (error) => {
+        console.error('Error al cargar datos:', error);
+      }
+    );
+  }
+
+  calcularTotales(): void {
+    this.totalGastos = this.data.reduce(
+      (sum, gasto) => sum + gasto.cantidad,
+      0
+    );
+    this.totalVentas = this.data2.reduce(
+      (sum, venta) => sum + venta.cantidad,
+      0
+    );
+    this.totalActual = this.totalVentas - this.totalGastos;
+  }
 
   generarPDF(): void {
     const doc = new jsPDF();
 
-    // Construcción del PDF
     doc.setFontSize(20);
     doc.text('TaxTrack - Extracto Mensual', 105, 20, { align: 'center' });
     doc.setFontSize(14);
