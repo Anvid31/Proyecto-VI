@@ -5,15 +5,28 @@ import respuestas from "../utils/respuestas.js";
 const router = Router();
 
 router.post("/Gastos", (req, res) => {
+  const gasto = req.body
+
   gastosService
-    .crearGastos(req.body)
+    .crearGastos(gasto)
+    .then((gasto) => {
+      respuestas.exito(req, res, gasto , 201);
 
-    .then((Gastos) => {
-      console.log(req.body);
-      console.log(Gastos);
-      respuestas.exito(req, res, "Gasto Creado", 201);
+    })
+    .catch((err) => {
+      respuestas.error(req, res, err, "Error al Crear", 400);
+      console.log(err);
+    });
+});
 
-      // io.emit("nuevoGasto", data);
+router.post("/Ventas", (req, res) => {
+  const venta = req.body
+
+  gastosService
+    .crearVenta(venta)
+    .then((venta) => {
+      respuestas.exito(req, res, venta , 201);
+
     })
     .catch((err) => {
       respuestas.error(req, res, err, "Error al Crear", 400);

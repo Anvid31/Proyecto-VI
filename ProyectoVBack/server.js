@@ -13,7 +13,7 @@ var app = express();
 const port = process.env.PORT;
 const host = process.env.HOST;
 const server = http.createServer(app);
-setupSocket(server)
+setupSocket(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,24 +24,6 @@ app.use(
   })
 );
 rutas(app);
-
-
-
-io.on("connection ", (socket) => {
-  console.log("Usuario conectado");
-
-  socket.on("mensaje", (mensaje) => {
-    try {
-      io.emit("mensaje", mensaje);
-    } catch (error) {
-      console.error("Error manejando el mensaje:", error);
-    }
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Usuario desconectado");
-  });
-});
 
 conexion()
   .then(() => {

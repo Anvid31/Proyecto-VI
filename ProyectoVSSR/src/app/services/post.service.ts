@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 export interface Form {
   Nombre: string;
   Descripcion: string;
-  Cantidad: string;
+  Cantidad: number;
   Fecha: string;
 }
 
@@ -14,11 +15,17 @@ export interface Form {
 })
 
 export class PostService {
-  private url = 'http://localhost:8000/Gastos'
+  private url = environment.url
 
   constructor(private http: HttpClient) { }
 
   sendData(data: any): Observable<any> {
-    return this.http.post(this.url, data);
-  } 
+    return this.http.post(`${this.url}Gastos`, data);
+  }
+
+  sendDataV(data: any): Observable<any> {
+    return this.http.post(`${this.url}Ventas`, data);
+  }
+
+
 }

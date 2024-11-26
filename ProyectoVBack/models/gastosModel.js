@@ -8,5 +8,6 @@ const gastosSchema = new mongoose.Schema({
 });
 
 const DispositivoModel = mongoose.model("Gastos", gastosSchema);
+const DispositivoModelVenta = mongoose.model("Ventas", gastosSchema);
 
-export { DispositivoModel };
+export { DispositivoModel, DispositivoModelVenta };

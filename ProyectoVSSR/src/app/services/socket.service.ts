@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from 'socket.io-client';
 
 @Injectable({
@@ -7,10 +7,15 @@ import { io } from 'socket.io-client';
 })
 export class SocketService {
   private socket = io('http://localhost:8000');
+  private dataSubject = new BehaviorSubject<any>({ gasto: [], venta: [] });
+
+  constructor() {
+    this.socket.on('data', (data) => {
+      this.dataSubject.next(data);
+    });
+  }
 
   getSocketData(): Observable<any> {
-    return new Observable((observer) => {
-      this.socket.on('data', (data) => observer.next(data));
-    });
+    return this.dataSubject.asObservable();
   }
 }

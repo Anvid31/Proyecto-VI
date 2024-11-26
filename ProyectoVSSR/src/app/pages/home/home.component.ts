@@ -12,7 +12,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class HomeComponent implements OnInit {
   data: any[] = [];
-  socket: any;
+  data2: any[] = [];
+  totalGastos: number = 0;
+  totalVentas: number = 0;
+  totalActual: number = 0;
 
   constructor(private socketService: SocketService) {}
 
@@ -23,12 +26,19 @@ export class HomeComponent implements OnInit {
   getSocket() {
     this.socketService.getSocketData().subscribe(
       (data) => {
-        this.data = data;
-        console.log(this.data);
+        this.data = data.gasto;
+        this.data2 = data.venta;
+        this.calcularTotales();
       },
       (error) => {
         console.error('Error al cargar datos:', error); 
       }
     );
+  }
+
+  calcularTotales() {
+    this.totalGastos = this.data.reduce((sum, item) => sum + Number(item.cantidad), 0);
+    this.totalVentas = this.data2.reduce((sum, item) => sum + Number(item.cantidad), 0);
+    this.totalActual = this.totalVentas - this.totalGastos;
   }
 }

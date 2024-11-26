@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { Form, PostService } from '../../services/post.service';
+import { PostService, Form } from '../../services/post.service';
 
 @Component({
-  selector: 'app-post',
+  selector: 'app-post-buy',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, ReactiveFormsModule],
-  templateUrl: './post.component.html',
-  styleUrl: './post.component.css',
+  templateUrl: './post-buy.component.html',
+  styleUrl: './post-buy.component.css'
 })
-export class PostComponent {
+export class PostBuyComponent {
   form: Form = {
     Nombre: '',
     Descripcion: '',
@@ -23,10 +23,9 @@ export class PostComponent {
 
   onSubmit() {
     if (this.form.Nombre && this.form.Cantidad && this.form.Fecha) {
-      this.postservice.sendData(this.form).subscribe(
-        
+      this.postservice.sendDataV(this.form).subscribe(
+    
         (response) => {
-          console.log('Data sent successfully', response);
           this.router.navigate(['/']);
         },
         (error) => {
@@ -38,6 +37,6 @@ export class PostComponent {
     }
   }
 
-  
+ 
   
 }
